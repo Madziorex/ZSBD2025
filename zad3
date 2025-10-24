@@ -1,0 +1,82 @@
+----1
+CREATE OR REPLACE VIEW v_wysokie_pensje AS
+SELECT 
+employee_id,
+first_name,
+last_name,
+salary,
+job_id,
+department_id
+FROM employees
+WHERE salary > 6000;
+
+----2
+CREATE OR REPLACE VIEW v_wysokie_pensje AS
+SELECT 
+employee_id,
+first_name,
+last_name,
+salary,
+job_id,
+department_id
+FROM employees WHERE salary > 12000;
+
+----3
+DROP VIEW v_wysokie_pensje;
+
+----4
+CREATE OR REPLACE VIEW v_finance_employees AS
+SELECT 
+e.employee_id,
+e.last_name,
+e.first_name
+FROM employees e
+JOIN departments d
+ON e.department_id = d.department_id
+WHERE d.department_name = 'Finance';
+
+----5
+CREATE OR REPLACE VIEW v_between_salary_employees AS
+SELECT 
+employee_id,
+last_name,
+first_name,
+salary,
+job_id,
+email,
+hire_date
+FROM employees
+WHERE salary BETWEEN 5000 AND 12000;
+
+----6
+--a
+INSERT INTO v_between_salary_employees (employee_id, first_name, last_name, salary, job_id, email, hire_date)
+VALUES (999, 'Test', 'User', 6000, 'IT_PROG', 'test.user@example.com', DATE '2025-10-24');
+
+--b
+UPDATE v_between_salary_employees
+SET salary = 7000
+WHERE employee_id = 999;
+
+--c
+DELETE FROM v_between_salary_employees
+WHERE employee_id = 999;
+
+----7
+CREATE OR REPLACE VIEW v_department_employee AS
+SELECT 
+d.department_id,
+d.department_name,
+COUNT(e.employee_id) AS liczba_pracownikow,
+ROUND(AVG(e.salary)) AS srednia_pensja,
+MAX(e.salary) AS najwyzsza_pensja
+FROM departments d
+JOIN employees e
+ON d.department_id = e.department_id
+GROUP BY d.department_id, d.department_name
+HAVING COUNT(e.employee_id) >= 4;
+
+--a
+nie
+
+----8
