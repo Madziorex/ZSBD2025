@@ -80,3 +80,50 @@ HAVING COUNT(e.employee_id) >= 4;
 nie
 
 ----8
+CREATE OR REPLACE VIEW v_between_salary_employees AS
+SELECT 
+    employee_id,
+    last_name,
+    first_name,
+    salary,
+    job_id,
+    email,
+    hire_date
+FROM employees
+WHERE salary BETWEEN 5000 AND 12000
+WITH CHECK OPTION;
+
+--a
+tak
+
+--b
+nie
+
+----9
+CREATE MATERIALIZED VIEW v_managerowie AS
+SELECT 
+    e.employee_id,
+    e.first_name,
+    e.last_name,
+    d.department_name
+FROM employees e
+JOIN departments d 
+    ON e.department_id = d.department_id
+WHERE e.employee_id IN (
+    SELECT DISTINCT manager_id
+    FROM employees
+    WHERE manager_id IS NOT NULL
+);
+
+----10
+CREATE OR REPLACE VIEW v_najlepiej_oplacani AS
+SELECT 
+    employee_id,
+    first_name,
+    last_name,
+    salary,
+    job_id,
+    department_id
+FROM employees
+ORDER BY salary DESC
+FETCH FIRST 10 ROWS ONLY;
